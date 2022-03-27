@@ -4,7 +4,8 @@ import com.companymanager.entity.Employee;
 import com.companymanager.entity.TransactionInfo;
 import com.companymanager.entity.UtilInfo;
 import com.companymanager.entity.condition.SalaryOrderTopic;
-//hot-fix 分支
+//hot-fix
+//冲突
 
 import java.util.List;
 import java.util.Map;
