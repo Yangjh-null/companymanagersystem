@@ -1,14 +1,14 @@
 package com.companymanager.web.service;
 
 import com.companymanager.entity.Employee;
-import com.companymanager.entity.SalaryInfo;
 import com.companymanager.entity.TransactionInfo;
 import com.companymanager.entity.UtilInfo;
 import com.companymanager.entity.condition.SalaryOrderTopic;
-import com.companymanager.entity.condition.TransInfoSumCondition;
 
 import java.util.List;
 import java.util.Map;
+
+//修改 1
 
 public interface IAdminService {
 
