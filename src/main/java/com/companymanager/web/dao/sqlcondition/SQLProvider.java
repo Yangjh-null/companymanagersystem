@@ -44,7 +44,7 @@ public class SQLProvider {
     }
     //结算工资sql
     public String querySalary(){
-        String sql = "select trans.emp_id,ee.emp_name,sar_basic,sar_merits ,sal_merits_precent,(sal_merits_precent/100)*sar_merits as sal_real_merits,trans.late_sum*util.util_late_money as late_mon ,trans.exit_sum*util.util_exit_money as exit_mon ,\n" +
+        String sql = "select trans.emp_id,ee.emp_name,sar_basic,sar_merits ,sal_merits_precent,Round((sal_merits_precent/100)*sar_merits) as sal_real_merits,trans.late_sum*util.util_late_money as late_mon ,trans.exit_sum*util.util_exit_money as exit_mon ,\n" +
                 "trans.leave_sum*util.util_hoilday_money as leave_mon,trans.work_overtime*util.util_overtime_money as work_on_time,util.util_eat_sub as eat_sub ,util.util_traffic_sub as trff_sub,util.util_mark as mark_mon,\n" +
                 "sar_merits+sar_basic+util_eat_sub+util_traffic_sub+util_mark as  sar_all ,left(record_time,7) as record_time\n" +
                 "from (select * from  transaction_info_sum  where year(record_time) = year(now()) AND month(record_time)  = month(now())) \n" +

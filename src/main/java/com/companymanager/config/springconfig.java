@@ -29,8 +29,5 @@ public class springconfig implements WebMvcConfigurer {
                return null;
             }
         };
-
     }
-
-
 }
