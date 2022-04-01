@@ -33,9 +33,8 @@ public interface IEmployeeMapper {
     int updateEmployeeInfo(Employee emp);
 
     //事务申请：
-    @Insert("INSERT INTO transaction_info " +
-            "(emp_id,trans_demo,trans_reason,trans_time,status_access " +
-            ")VALUES(#{empId},#{transDemo},#{transReason},#{transTime},0);")
+    @Insert("insert into transaction_info (emp_id, dep_id, trans_demo, trans_reason, trans_time, status_access, tran_time)\n" +
+            "values(#{empId},#{depId},#{transDemo},#{transReason},#{transTime},0,now());")
     int insertTransaction(TransactionInfo transactionInfo);
 
     //查看考勤

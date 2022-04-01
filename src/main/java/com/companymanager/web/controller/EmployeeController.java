@@ -7,6 +7,8 @@ import com.companymanager.util.RedisUtil;
 import com.companymanager.web.service.IEmployeeService;
 import com.companymanager.z_resultpackage.Result;
 import com.companymanager.z_resultpackage.ResultStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,8 @@ import static com.companymanager.web.service.IEmployeeServiceImpl.EMP_KEY;
 @RestController
 @RequestMapping("employee")
 public class EmployeeController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(EmployeeController.class);
 
     @Autowired
     private IEmployeeService employeeService;
@@ -37,10 +41,20 @@ public class EmployeeController {
     @RequestMapping("login")
     public Result loginController(@RequestBody Map<String,String> map){
         if(redisUtil.get(EMP_KEY+map.get("empId")) == null){ //未注册 账号
+            LOG.info("redis中员工的键"+redisUtil.get(EMP_KEY+map.get("empId")));
             return Result.successNoData(ResultStatus.USER_NOT_EXIST);//不存在
         }
-        Employee emp = employeeService.queryEmployeeByUserNameAndPassword(map);
-        return emp == null ? Result.fail(ResultStatus.FAIL):Result.successAndData(ResultStatus.SUCCESS,emp);
+        Employee emp = null;
+        try {
+            emp = employeeService.queryEmployeeByUserNameAndPassword(map);
+            LOG.info("查找的员工："+emp);
+            if(emp.getEmpStatus() == 0){
+                return Result.fail(ResultStatus.EXAMINE_AND_APPROVE);   //未审批
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        return Result.successAndData(ResultStatus.SUCCESS,emp); //成功登录
     }
 
     @RequestMapping("updatePassword")
@@ -51,6 +65,7 @@ public class EmployeeController {
     //修改个人信息
     @RequestMapping("updateEmpInfo")
     public Result updateEmployeeInfo(@RequestBody Employee emp){
+        LOG.info("updateEmpInfo接口参数："+emp);
         int row  = employeeService.updateEmployeeInfo(emp);
         return row == 1 ?Result.successNoData(ResultStatus.SUCCESS):Result.successNoData(ResultStatus.FAIL);
     }

@@ -1,18 +1,17 @@
 package com.companymanager.web.controller;
 
 import com.companymanager.entity.Employee;
-import com.companymanager.entity.SalaryInfo;
 import com.companymanager.entity.TransactionInfo;
 import com.companymanager.entity.UtilInfo;
 import com.companymanager.entity.condition.SalaryOrderTopic;
-import com.companymanager.entity.condition.TransInfoSumCondition;
 import com.companymanager.web.service.IAdminService;
 import com.companymanager.z_resultpackage.Result;
 import com.companymanager.z_resultpackage.ResultStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -21,6 +20,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("admin")
 public class HRAdminController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(HRAdminController.class);
 
     @Autowired
     private IAdminService adminService;
@@ -61,13 +62,13 @@ public class HRAdminController {
 
     //审批事务 修改状态值
     @RequestMapping("updateTranStatus")
-    public Result updateTranStatus(@RequestBody Map<String,Integer>map){
-        if(map.get("status") == 0){  //表示驳回
+    public Result updateTranStatus(@RequestBody Map<String,String>map){
+        if(map.get("status").equals('0') ){  //表示驳回
             //加入消息队列 通知
             return Result.successNoData(ResultStatus.SUCCESS);
         }
-        int row = adminService.updateTranStatus(map);
-        return row == 1? Result.successNoData(ResultStatus.SUCCESS):Result.fail(ResultStatus.FAIL) ;
+        boolean bool = adminService.updateTranStatus(map);
+        return bool? Result.successNoData(ResultStatus.SUCCESS):Result.fail(ResultStatus.FAIL) ;
     }
 
     //查看考勤等规则工具表

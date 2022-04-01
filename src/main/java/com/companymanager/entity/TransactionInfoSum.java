@@ -1,27 +1,26 @@
 package com.companymanager.entity;
 
 
-import java.sql.Date;
-
-
-//考勤 总计 按月
 public class TransactionInfoSum {
 
-  private int id;
-  private String empId;  //工号
-  private int leaveSum;  //请假
-  private int workOvertime;  //加班时间
-  private int exitSum;   //早退 次数
-  private int lateSum;   //迟到 次数
-  private Date recordTime;  //考勤时间
+  private long id;
+  private String empId;
+  private long depId;
+  private double leaveSum;
+  private double workOvertime;
+  private long exitSum;
+  private long lateSum;
+  private java.sql.Date recordTime;
 
-  public int getId() {
+
+  public long getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(long id) {
     this.id = id;
   }
+
 
   public String getEmpId() {
     return empId;
@@ -31,43 +30,72 @@ public class TransactionInfoSum {
     this.empId = empId;
   }
 
-  public int getLeaveSum() {
+
+  public long getDepId() {
+    return depId;
+  }
+
+  public void setDepId(long depId) {
+    this.depId = depId;
+  }
+
+
+  public double getLeaveSum() {
     return leaveSum;
   }
 
-  public void setLeaveSum(int leaveSum) {
+  public void setLeaveSum(double leaveSum) {
     this.leaveSum = leaveSum;
   }
 
-  public int getWorkOvertime() {
+
+  public double getWorkOvertime() {
     return workOvertime;
   }
 
-  public void setWorkOvertime(int workOvertime) {
+  public void setWorkOvertime(double workOvertime) {
     this.workOvertime = workOvertime;
   }
 
-  public int getExitSum() {
+
+  public long getExitSum() {
     return exitSum;
   }
 
-  public void setExitSum(int exitSum) {
+  public void setExitSum(long exitSum) {
     this.exitSum = exitSum;
   }
 
-  public int getLateSum() {
+
+  public long getLateSum() {
     return lateSum;
   }
 
-  public void setLateSum(int lateSum) {
+  public void setLateSum(long lateSum) {
     this.lateSum = lateSum;
   }
 
-  public Date getRecordTime() {
+
+  public java.sql.Date getRecordTime() {
     return recordTime;
   }
 
-  public void setRecordTime(Date recordTime) {
+  public void setRecordTime(java.sql.Date recordTime) {
     this.recordTime = recordTime;
+  }
+
+
+  @Override
+  public String toString() {
+    return "TransactionInfoSum{" +
+            "id=" + id +
+            ", empId='" + empId + '\'' +
+            ", depId=" + depId +
+            ", leaveSum=" + leaveSum +
+            ", workOvertime=" + workOvertime +
+            ", exitSum=" + exitSum +
+            ", lateSum=" + lateSum +
+            ", recordTime=" + recordTime +
+            '}';
   }
 }

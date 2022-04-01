@@ -1,5 +1,6 @@
 package com.companymanager.web.controller;
 
+import com.companymanager.entity.condition.EchartsCondition;
 import com.companymanager.web.service.UtilService;
 import com.companymanager.z_resultpackage.Result;
 import com.companymanager.z_resultpackage.ResultStatus;
@@ -38,6 +39,13 @@ public class UtilController {
         String DepName = utilService.queryDepNameByDepId(depId);
           String res =  (DepName == null) ? "": DepName;
         return Result.successAndData(ResultStatus.SUCCESS,DepName);
+    }
+    //查看 每个部门下的总人数
+    @RequestMapping("querySumByDept")
+    public Result queryNumberSumByDeptName(){
+        List<EchartsCondition> list = utilService.queryNumberSumByDeptName();
+        return Result.successAndData(ResultStatus.SUCCESS,list);
+
     }
 
 }

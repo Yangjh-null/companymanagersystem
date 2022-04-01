@@ -2,14 +2,11 @@ package com.companymanager.web.dao;
 
 import com.companymanager.entity.Employee;
 import com.companymanager.entity.TransactionInfo;
+import com.companymanager.entity.TransactionInfoSum;
 import com.companymanager.entity.UtilInfo;
 import com.companymanager.entity.condition.SalaryOrderTopic;
-import com.companymanager.entity.condition.TransInfoSumCondition;
 import com.companymanager.web.dao.sqlcondition.SQLProvider;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +23,7 @@ public interface IAdminMapper {
     List<Employee> queryNoAccessEmp();
 
         // 2.修改审批状态 同意审批
-    @Update("update employee_info where set emp_status = 1 ,  where emp_id = #{empId} ")
+    @Update("update employee_info where set emp_status = 1 where emp_id = #{empId} ")
     int updateEmployeeStatus(Map<String,String> map);
         // 3.设置绩效和基本工资
     @Update("update salary_info set sar_basic = #{sarBasic} , sar_merits = #{sarMerits} where emp_id = #{empId} ")
@@ -35,8 +32,24 @@ public interface IAdminMapper {
     @SelectProvider(value = SQLProvider.class,method = "queryTransactionInfo")
     List<TransactionInfo> queryTransactionInfo(Map<String,String> map);
 
+    //1. 审批事务 请假等
     @Update("update transaction_info set status_access = #{status} where id = #{id}")
-    int updateTransactionInfoStatus(Map<String,Integer> map);
+    int updateTransactionInfoStatus(Map<String,String> map);
+    //2. 同意之后 加入事务总计表，用以计算工资
+            // 先查找 当月有无记录
+    @Select("select * from transaction_info_sum where emp_id = #{empId}  AND year(#{tranTime}) = year(record_time) AND month(#{tranTime}) = month(record_time);")
+    TransactionInfoSum queryTransInfoRecord(Map<String,String> map);
+        //2.1 如果没有记录则新增 一条记录
+    @Insert("INSERT INTO transaction_info_sum\n" +
+            "(emp_id, dep_id, leave_sum, work_overtime, exit_sum, late_sum, record_time) \n" +
+            " VALUES (#{empId},#{depId}, #{leaveSum}, #{workOvertime}, #{exitSum}, #{lateSum}, #{recordTime} );")
+    int insertTransInfoRecord(TransactionInfoSum transactionInfoSum);
+
+        //2.2 如果当月有记录，则直接在对应的事务次数上加1；
+    @Update("update transaction_info_sum set dep_id =#{tran.depId} ,leave_sum = #{tran.leaveSum} , work_overtime =  #{tran.workOvertime}" +
+            ",exit_sum = #{tran.exitSum},late_sum = #{tran.lateSum} where emp_id = #{tran.empId} AND year(#{tranTime}) = year(record_time) AND month(#{tranTime}) = month(record_time); ")
+    int updateTransInfoRecord(@Param("tran") TransactionInfoSum transactionInfoSum,@Param("tranTime") String tranTime);
+
 
     @Select("SELECT * FROM util_info;")
     UtilInfo queryUtilInfo();

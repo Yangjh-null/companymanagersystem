@@ -1,5 +1,6 @@
 package com.companymanager.web.service;
 
+import com.companymanager.entity.condition.EchartsCondition;
 import com.companymanager.web.dao.IUtilMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,11 @@ public class UtilServiceImpl implements UtilService {
     @Override
     public String queryDepNameByDepId(int depId) {
         return utilMapper.queryDepNameByDepId(depId);
+    }
+
+    @Override
+    public List<EchartsCondition> queryNumberSumByDeptName() {
+        List<EchartsCondition> list = utilMapper.queryNumberSumByDeptName();
+        return list == null ? new ArrayList<>(): list;
     }
 }

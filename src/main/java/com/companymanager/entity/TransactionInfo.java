@@ -1,6 +1,8 @@
 package com.companymanager.entity;
 
 
+import java.util.Date;
+
 public class TransactionInfo {
 
   private String empId;
@@ -10,7 +12,7 @@ public class TransactionInfo {
   private double transTime;
   private long statusAccess;
   private long id;
-  private java.sql.Timestamp tranTime;
+  private Date tranTime;
   private String empName;
 
   public String getEmpName() {
@@ -84,11 +86,11 @@ public class TransactionInfo {
   }
 
 
-  public java.sql.Timestamp getTranTime() {
+  public Date getTranTime() {
     return tranTime;
   }
 
-  public void setTranTime(java.sql.Timestamp tranTime) {
+  public void setTranTime(Date tranTime) {
     this.tranTime = tranTime;
   }
 

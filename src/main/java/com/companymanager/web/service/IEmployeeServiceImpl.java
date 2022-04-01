@@ -28,7 +28,7 @@ public class IEmployeeServiceImpl implements  IEmployeeService{
 
     @Override
     public int insertIntoNewEmployee(Employee employee) {
-        //生成工号：主键
+         //生成工号：主键
          String empId = UUID.randomUUID().toString().substring(3,8);
          employee.setEmpId(empId);
          redisUtil.set(EMP_KEY+empId,"1");
@@ -36,7 +36,8 @@ public class IEmployeeServiceImpl implements  IEmployeeService{
          return row;
     }
 
-    //通过用户名密码查找已审批的员工  已审批方可登录成功 否则 等待人事审批
+    /*通过用户名密码查找已审批的员工  已审批方可登录成功 否则 等待人事审批
+    **/
     @Override
     public Employee queryEmployeeByUserNameAndPassword(Map<String,String> map) {
         Employee emp = employeeMapper.queryEmployee(map);

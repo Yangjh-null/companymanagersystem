@@ -17,7 +17,7 @@ public interface IAdminService {
 
     List<TransactionInfo> queryTransactionInfo(Map<String,String> map);
 
-    int updateTranStatus(Map<String,Integer>map);
+    boolean updateTranStatus(Map<String,String>map);
 
     UtilInfo queryUtilInfo();
 

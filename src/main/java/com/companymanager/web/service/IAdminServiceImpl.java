@@ -2,20 +2,25 @@ package com.companymanager.web.service;
 
 import com.companymanager.entity.Employee;
 import com.companymanager.entity.TransactionInfo;
+import com.companymanager.entity.TransactionInfoSum;
 import com.companymanager.entity.UtilInfo;
 import com.companymanager.entity.condition.SalaryOrderTopic;
-import com.companymanager.entity.condition.TransInfoSumCondition;
 import com.companymanager.web.dao.IAdminMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class IAdminServiceImpl implements IAdminService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(IAdminServiceImpl.class);
 
    @Autowired
    private IAdminMapper adminMapper;
@@ -38,8 +43,9 @@ public class IAdminServiceImpl implements IAdminService {
     @Override
     @Transactional
     public boolean updateEmployeeStatus(Map<String, String> map) {
-       int row1 =  adminMapper.updateEmployeeStatus(map);
-       int row2 = adminMapper.updateSalaryByEmpId(map);
+       int row1 =  adminMapper.updateEmployeeStatus(map); //修改状态
+
+       int row2 = adminMapper.updateSalaryByEmpId(map);  //修改绩效工资  基本工资
         return (row1 == 1) && (row2 == 1);
     }
 
@@ -52,15 +58,41 @@ public class IAdminServiceImpl implements IAdminService {
 
     //审批 通过 / 驳回 事务申请
     @Override
-    public int updateTranStatus(Map<String,Integer> map) {
+    @Transactional
+    public boolean updateTranStatus(Map<String,String> map) {
+        int insertRow = 0,updateRow = 0;
+        //修改状态
         int row = adminMapper.updateTransactionInfoStatus(map);
+        LOG.info("修改事务影响行数："+row);
         // row == 1 表示通过
-        //A  加入到事务总计表中
-            //1.1 先查找总计表
-                // 1.1.1 如果存在 则 找对应的属性增加
-                // 1.1.2 不存在 则创建新对象 添加属性值 后 在插入
-        //发送通知邮件到员工邮箱  消息队列
-        return row;
+        //A  通过则 加入到事务总计表中
+            //1.1 通过empId先查找总计表
+        TransactionInfoSum transactionInfoSum = adminMapper.queryTransInfoRecord(map);
+        if(transactionInfoSum == null){    // 1.1.2 不存在 则创建新对象 添加属性值 后 在插入
+
+            transactionInfoSum = new TransactionInfoSum();
+            transactionInfoSum.setEmpId(map.get("empId"));
+            transactionInfoSum.setRecordTime(Date.valueOf(map.get("tranTime")));
+            transactionInfoSum.setDepId(Integer.parseInt(map.get("depId")));
+            LOG.info("总计表中无记录 新建对象"+transactionInfoSum);
+                //插入新记录
+             insertRow = adminMapper.insertTransInfoRecord(transactionInfoSum);
+        }
+
+        if (map.get("transDemo").equals("请假")){
+            transactionInfoSum.setLeaveSum(transactionInfoSum.getLeaveSum()+Double.parseDouble(map.get("transTime")));
+        }else{
+            transactionInfoSum.setWorkOvertime(transactionInfoSum.getWorkOvertime()+Double.parseDouble(map.get("transTime")));
+        }
+            //修改新记录或者 原纪录的属性次数
+             updateRow =adminMapper.updateTransInfoRecord(transactionInfoSum,map.get("tranTime"));
+        if(row == 1 && (insertRow == 1 || updateRow ==1)){
+            //发送通知邮件到员工邮箱  消息队列
+            LOG.info("发送邮件消息。。。。。");
+            return true;
+        }
+
+        return false;
     }
 
 
