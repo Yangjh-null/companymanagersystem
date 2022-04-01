@@ -23,7 +23,7 @@ public interface IAdminMapper {
     List<Employee> queryNoAccessEmp();
 
         // 2.修改审批状态 同意审批
-    @Update("update employee_info where set emp_status = 1 where emp_id = #{empId} ")
+    @Update("update employee_info  set emp_status = 1 where emp_id = #{empId} ")
     int updateEmployeeStatus(Map<String,String> map);
         // 3.设置绩效和基本工资
     @Update("update salary_info set sar_basic = #{sarBasic} , sar_merits = #{sarMerits} where emp_id = #{empId} ")

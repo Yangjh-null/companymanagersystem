@@ -38,7 +38,7 @@ spring:
   #配置 邮箱参数
   mail:
     host: smtp.163.com							#smtp邮箱服务器
-    password: XAXHYUVWPCURLISE        #smtp邮箱服务器授权密码
+    password: XAXHYUVWPCURLISE #smtp邮箱服务器授权密码
     username: jiangx_null@163.com   #你的邮箱账号 （作为系统账号 进行发送）
     port: 25													#端口号
     protocol: smtp										#协议类型
@@ -58,21 +58,20 @@ server:
   port: 9000
   max-http-header-size: 8KB
 #
-##rocketmq配置
-#rocketmq:
-#  name-server: 127.0.0.1:9876
-#  # 生产者配置
-#  producer:
-#    isOnOff: on
-#    # 发送同一类消息的设置为同一个group，保证唯一
-#    group: rocketmq-group-delivery-status
-#    groupName: rocketmq-group-delivery
-#    groupNameCom: rocketmq-group-companyAccess
-#    # 服务地址
-#    namesrvAddr: 127.0.0.1:9876
-#    # 消息最大长度 默认1024*4(4M)
-#    maxMessageSize: 4096
-#    # 发送消息超时时间,默认3000
-#    sendMsgTimeout: 3000
-#    # 发送消息失败重试次数，默认2
-#    retryTimesWhenSendFailed: 2
+#rocketmq配置
+rocketmq:
+  name-server: 127.0.0.1:9876
+  # 生产者配置
+  producer:
+    isOnOff: on
+    # 发送同一类消息的设置为同一个group，保证唯一
+    group: rocketmq-group-employee-access
+    # 服务地址
+    namesrvAddr: 127.0.0.1:9876
+    # 消息最大长度 默认1024*4(4M)
+    maxMessageSize: 4096
+    # 发送消息超时时间,默认3000
+    sendMsgTimeout: 3000
+    # 发送消息失败重试次数，默认2
+    retryTimesWhenSendFailed: 2
+

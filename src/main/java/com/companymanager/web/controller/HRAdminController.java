@@ -1,5 +1,6 @@
 package com.companymanager.web.controller;
 
+import com.companymanager.config.rocketmq.RocketMqHelper;
 import com.companymanager.entity.Employee;
 import com.companymanager.entity.TransactionInfo;
 import com.companymanager.entity.UtilInfo;
@@ -10,6 +11,7 @@ import com.companymanager.z_resultpackage.ResultStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +24,9 @@ import java.util.Map;
 public class HRAdminController {
 
     private static final Logger LOG = LoggerFactory.getLogger(HRAdminController.class);
+
+    @Autowired
+    private RocketMqHelper rocketMqHelper;
 
     @Autowired
     private IAdminService adminService;
@@ -45,9 +50,13 @@ public class HRAdminController {
     @RequestMapping("updateAccessStatus")
     public Result updateEmployeeAccess(@RequestBody Map<String,String> map ){
         if(map.get("status").equals("0")){
+            rocketMqHelper.asyncSend("rocketmq-group-employee-access", MessageBuilder.withPayload(map).build());
             return Result.successNoData(ResultStatus.SUCCESS);
         }
         boolean bool = adminService.updateEmployeeStatus(map);
+
+        rocketMqHelper.asyncSend("rocketmq-group-employee-access", MessageBuilder.withPayload(map).build());
+
         return bool ? Result.successNoData(ResultStatus.SUCCESS):Result.fail(ResultStatus.FAIL);
     }
 
