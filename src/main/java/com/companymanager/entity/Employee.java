@@ -15,7 +15,7 @@ public class Employee {
     private int empStatus; //审批状态
     private String empMail;//邮箱
     private String empPass;//密码  默认身份证后六位
-    private int empGrade; //区分普通员工和部门管理员
+    private int empGrade; //区分普通员工1 和部门管理员2
 
 
     public String getEmpId() {

@@ -25,7 +25,8 @@ public class SendMailUtil {
 
         String toMail = map.get("toMail"); //真实员工邮箱
         //测试邮箱
-        toMail = "1747846658@qq.com";
+        //toMail = "1747846658@qq.com";
+        toMail = "1799785545@qq.com";
         int access = Integer.parseInt(map.get("status"));
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(fromMail);

@@ -1,9 +1,6 @@
 package com.companymanager.web.service;
 
-import com.companymanager.entity.Employee;
-import com.companymanager.entity.TransactionInfo;
-import com.companymanager.entity.TransactionInfoSum;
-import com.companymanager.entity.UtilInfo;
+import com.companymanager.entity.*;
 import com.companymanager.entity.condition.SalaryOrderTopic;
 import com.companymanager.web.dao.IAdminMapper;
 import org.slf4j.Logger;
@@ -45,7 +42,7 @@ public class IAdminServiceImpl implements IAdminService {
     public boolean updateEmployeeStatus(Map<String, String> map) {
        int row1 =  adminMapper.updateEmployeeStatus(map); //修改状态
 
-       int row2 = adminMapper.updateSalaryByEmpId(map);  //修改绩效工资  基本工资
+       int row2 = adminMapper.insertSalary(map);  //将新员工插入到 工资表   ：绩效工资  基本工资
         return (row1 == 1) && (row2 == 1);
     }
 
@@ -133,6 +130,13 @@ public class IAdminServiceImpl implements IAdminService {
             return new ArrayList<>();
         }
         return salaryOrderTopicList;
+    }
+
+    //保存工资
+
+    @Override
+    public int saveSalaryRecord(List<SalaryOrderTopic> list) {
+        return adminMapper.saveSalaryRecord(list);
     }
 }
 

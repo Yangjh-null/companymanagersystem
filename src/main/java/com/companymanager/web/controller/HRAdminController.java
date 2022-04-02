@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -55,9 +56,11 @@ public class HRAdminController {
         }
         boolean bool = adminService.updateEmployeeStatus(map);
 
-        rocketMqHelper.asyncSend("rocketmq-group-employee-access", MessageBuilder.withPayload(map).build());
-
-        return bool ? Result.successNoData(ResultStatus.SUCCESS):Result.fail(ResultStatus.FAIL);
+        if(bool){ //修改成功在发送
+            rocketMqHelper.asyncSend("rocketmq-group-employee-access", MessageBuilder.withPayload(map).build());
+            return Result.successNoData(ResultStatus.SUCCESS);
+        }
+        return Result.fail(ResultStatus.FAIL); //失败
     }
 
     //查看申请的事务
@@ -104,7 +107,17 @@ public class HRAdminController {
     @RequestMapping("settleAccounts")
     public Result settleAccounts(){
         List<SalaryOrderTopic> list = adminService.queryEveryEmpSalary();
+
         return Result.successAndData(ResultStatus.SUCCESS,list);
+    }
+
+    //发放工资并保存记录
+    @RequestMapping("saveSalary")
+    public Result saveSalaryRecord(@RequestBody List<SalaryOrderTopic> list){
+
+        int effRow = adminService.saveSalaryRecord(list);
+
+        return effRow == list.size() ?Result.successNoData(ResultStatus.SUCCESS): Result.fail(ResultStatus.FAIL);
     }
 
 

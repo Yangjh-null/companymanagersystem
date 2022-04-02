@@ -1,9 +1,6 @@
 package com.companymanager.web.dao;
 
-import com.companymanager.entity.Employee;
-import com.companymanager.entity.TransactionInfo;
-import com.companymanager.entity.TransactionInfoSum;
-import com.companymanager.entity.UtilInfo;
+import com.companymanager.entity.*;
 import com.companymanager.entity.condition.SalaryOrderTopic;
 import com.companymanager.web.dao.sqlcondition.SQLProvider;
 import org.apache.ibatis.annotations.*;
@@ -26,8 +23,9 @@ public interface IAdminMapper {
     @Update("update employee_info  set emp_status = 1 where emp_id = #{empId} ")
     int updateEmployeeStatus(Map<String,String> map);
         // 3.设置绩效和基本工资
-    @Update("update salary_info set sar_basic = #{sarBasic} , sar_merits = #{sarMerits} where emp_id = #{empId} ")
-    int updateSalaryByEmpId(Map<String,String> map);
+     @Insert("insert into salary_info (emp_id, sar_basic, sar_merits,  sal_merits_precent)\n" +
+             "values(#{empId},#{sarBasic},#{sarMerits},0);")
+    int insertSalary(Map<String,String> map);
 
     @SelectProvider(value = SQLProvider.class,method = "queryTransactionInfo")
     List<TransactionInfo> queryTransactionInfo(Map<String,String> map);
@@ -78,4 +76,7 @@ public interface IAdminMapper {
     //结算工资：
     @SelectProvider(value = SQLProvider.class,method = "querySalary")
     List<SalaryOrderTopic> queryEveryEmpSalary();
+
+    @InsertProvider(value = SQLProvider.class,method = "saveSalaryRecord")
+    int saveSalaryRecord(List<SalaryOrderTopic> list);
 }

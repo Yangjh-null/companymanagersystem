@@ -1,6 +1,8 @@
 package com.companymanager.entity.condition;
 
 
+import java.sql.Date;
+
 public class SalaryOrderTopic {
 
     private String empId;
@@ -18,7 +20,7 @@ public class SalaryOrderTopic {
     private int markMon;  //全勤
     private int sarAll; //应发工资
     private int sarReal ; //实发工资
-    private String recordTime ; //记录时间
+    private Date recordTime ; //记录时间
 
     public int getSalRealMerits() {
         return salRealMerits;
@@ -140,11 +142,34 @@ public class SalaryOrderTopic {
         this.salMeritsPrecent = salMeritsPrecent;
     }
 
-    public String getRecordTime() {
+    public Date getRecordTime() {
         return recordTime;
     }
 
-    public void setRecordTime(String recordTime) {
+    public void setRecordTime(Date recordTime) {
         this.recordTime = recordTime;
+    }
+
+
+    @Override
+    public String toString() {
+        return "SalaryOrderTopic{" +
+                "empId='" + empId + '\'' +
+                ", empName='" + empName + '\'' +
+                ", sarBasic=" + sarBasic +
+                ", sarMerits=" + sarMerits +
+                ", salMeritsPrecent=" + salMeritsPrecent +
+                ", salRealMerits=" + salRealMerits +
+                ", lateMon=" + lateMon +
+                ", exitMon=" + exitMon +
+                ", leaveMon=" + leaveMon +
+                ", workOnTime=" + workOnTime +
+                ", eatSub=" + eatSub +
+                ", trffSub=" + trffSub +
+                ", markMon=" + markMon +
+                ", sarAll=" + sarAll +
+                ", sarReal=" + sarReal +
+                ", recordTime=" + recordTime +
+                '}';
     }
 }

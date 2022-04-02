@@ -1,6 +1,7 @@
 package com.companymanager.web.service;
 
 import com.companymanager.entity.Employee;
+import com.companymanager.entity.SalaryRealInfo;
 import com.companymanager.entity.TransactionInfo;
 import com.companymanager.entity.UtilInfo;
 import com.companymanager.entity.condition.SalaryOrderTopic;
@@ -26,4 +27,6 @@ public interface IAdminService {
     List<Map<String,Integer> > queryDeptSumByDeptId();
 
     List<SalaryOrderTopic> queryEveryEmpSalary();
+
+   int  saveSalaryRecord(List<SalaryOrderTopic> list);
 }

@@ -3,8 +3,10 @@ package com.companymanager.entity.condition;
 public class EchartsCondition {
 
 
+
     private String name ;
     private String value;
+
 
     public String getName() {
         return name;
@@ -21,4 +23,5 @@ public class EchartsCondition {
     public void setValue(String value) {
         this.value = value;
     }
+
 }

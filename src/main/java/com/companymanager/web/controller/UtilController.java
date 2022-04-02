@@ -1,6 +1,7 @@
 package com.companymanager.web.controller;
 
 import com.companymanager.entity.condition.EchartsCondition;
+import com.companymanager.entity.condition.EchartsConditionToOne;
 import com.companymanager.web.service.UtilService;
 import com.companymanager.z_resultpackage.Result;
 import com.companymanager.z_resultpackage.ResultStatus;
@@ -46,6 +47,13 @@ public class UtilController {
         List<EchartsCondition> list = utilService.queryNumberSumByDeptName();
         return Result.successAndData(ResultStatus.SUCCESS,list);
 
+    }
+
+    //查看 各个职位的人数
+    @RequestMapping("queryNumByPos")
+    public  Result queryNumByPosition(){
+        List<EchartsConditionToOne> list = utilService.queryPositionNum();
+        return Result.successAndData(ResultStatus.SUCCESS,list);
     }
 
 }

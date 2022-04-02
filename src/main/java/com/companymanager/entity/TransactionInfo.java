@@ -1,7 +1,7 @@
 package com.companymanager.entity;
 
 
-import java.util.Date;
+import java.sql.Date;
 
 public class TransactionInfo {
 

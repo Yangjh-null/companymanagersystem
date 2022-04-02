@@ -39,22 +39,22 @@ public class EmployeeController {
     }
 
     @RequestMapping("login")
-    public Result loginController(@RequestBody Map<String,String> map){
-        if(redisUtil.get(EMP_KEY+map.get("empId")) == null){ //未注册 账号
-            LOG.info("redis中员工的键"+redisUtil.get(EMP_KEY+map.get("empId")));
-            return Result.successNoData(ResultStatus.USER_NOT_EXIST);//不存在
+    public Result loginController(@RequestBody Map<String,String> map) {
+        if (redisUtil.get(EMP_KEY + map.get("empId")) == null) { //未注册 账号
+            LOG.info("redis中员工的键" + redisUtil.get(EMP_KEY + map.get("empId")));
+            return Result.successNoData(ResultStatus.USER_NOT_EXIST);//用户不存在
         }
         Employee emp = null;
-        try {
-            emp = employeeService.queryEmployeeByUserNameAndPassword(map);
-            LOG.info("查找的员工："+emp);
-            if(emp.getEmpStatus() == 0){
-                return Result.fail(ResultStatus.EXAMINE_AND_APPROVE);   //未审批
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+
+        emp = employeeService.queryEmployeeByUserNameAndPassword(map);
+        LOG.info("查找的员工：" + emp);
+        if (emp == null) {
+            return Result.successNoData(ResultStatus.USER_LOGIN_ERROR);   //用户名与密码不匹配
         }
-        return Result.successAndData(ResultStatus.SUCCESS,emp); //成功登录
+        if(emp.getEmpStatus() == 0){
+            return Result.successNoData(ResultStatus.EXAMINE_AND_APPROVE); //未审批
+        }
+            return Result.successAndData(ResultStatus.SUCCESS, emp); //成功登录
     }
 
     @RequestMapping("updatePassword")

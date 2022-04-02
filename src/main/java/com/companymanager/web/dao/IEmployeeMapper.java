@@ -16,11 +16,11 @@ public interface IEmployeeMapper {
     //员工注册账号
     @Insert("INSERT INTO employee_info " +
             "(emp_id,emp_name,emp_card,emp_sex,emp_educ,emp_deptid,emp_dept,emp_pos_name,emp_status,emp_phone,emp_address,emp_mail,emp_pass) " +
-            "VALUES(#{empId},#{empName},#{empCard},#{empSex},#{empEduc},#{empDeptid},#{empDept},#{empPosName},0,#{empPhone},#{empAddress},#{empMail},#{empPass}); ")
+            "VALUES(#{empId},#{empName},#{empCard},#{empSex},#{empEduc},#{empDeptid},#{empDept},#{empPosName},0,#{empPhone},#{empAddress},#{empMail},#{empPass},#{empGrade}); ")
     int insertNewEmployee(Employee emp);
 
     //员工登录账号
-    @Select("select * from employee_info where emp_id = #{empId} AND emp_pass = #{empPass} AND emp_status = 1")
+    @Select("select * from employee_info where emp_id = #{empId} AND emp_pass = #{empPass} ")
     Employee queryEmployee(Map<String,String> map);
 
     @Update("update employee_info set emp_pass = #{empPass} where emp_id = #{empId}")
