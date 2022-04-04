@@ -1,8 +1,10 @@
 package com.companymanager.web.service;
 
 import com.companymanager.entity.*;
+import com.companymanager.entity.condition.EmployeeCondition;
 import com.companymanager.entity.condition.SalaryOrderTopic;
 import com.companymanager.web.dao.IAdminMapper;
+import com.companymanager.web.dao.IEmployeeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +24,33 @@ public class IAdminServiceImpl implements IAdminService {
    @Autowired
    private IAdminMapper adminMapper;
 
+   @Autowired
+   private IEmployeeMapper employeeMapper;
+
     @Override
     public int queryAdmin(Map<String, String> map) {
         return adminMapper.queryAdmin(map);
     }
 
+    @Override
+    @Transactional
+    public int insertNewCompanyInfo(EmployeeCondition employeeCondition) {
+        LOG.info("新增员工信息："+employeeCondition.toString());
+        int row1 = employeeMapper.insertNewEmployee(employeeCondition); //新增  employee 表
+        int row2 = adminMapper.insertSalary(employeeCondition);  //将新员工插入到 工资表   ：绩效工资  基本工资
+
+        return row1+row2 ;
+    }
+
+    @Override
+    @Transactional
+    public boolean updateEmpInfo(EmployeeCondition emp) {
+        //修改基本信息
+        int row1 = adminMapper.updateEmployeeInfo(emp);
+        //修改工资 绩效
+        int row2 = adminMapper.updateEmpSalary(emp);
+        return row1==row2;
+    }
 
     //审批注册员工
         //1.查看未审批的员工
@@ -42,8 +66,8 @@ public class IAdminServiceImpl implements IAdminService {
     public boolean updateEmployeeStatus(Map<String, String> map) {
        int row1 =  adminMapper.updateEmployeeStatus(map); //修改状态
 
-       int row2 = adminMapper.insertSalary(map);  //将新员工插入到 工资表   ：绩效工资  基本工资
-        return (row1 == 1) && (row2 == 1);
+
+        return (row1 == 1);
     }
 
     //查看事务  未审批 已审批

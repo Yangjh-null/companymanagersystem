@@ -15,7 +15,7 @@ public interface IEmployeeService  {
 
     int updateEmployeePassword(Map<String,String> map);
 
-    int updateEmployeeInfo(Employee employee);
+    int updateEmployeeInfo(Map<String,String> map);
 
     int insertTransactionInfo(TransactionInfo transactionInfo);
 

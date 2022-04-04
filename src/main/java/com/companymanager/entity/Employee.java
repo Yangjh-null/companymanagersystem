@@ -129,4 +129,24 @@ public class Employee {
     public void setEmpGrade(int empGrade) {
         this.empGrade = empGrade;
     }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "empId='" + empId + '\'' +
+                ", empName='" + empName + '\'' +
+                ", empCard='" + empCard + '\'' +
+                ", empSex=" + empSex +
+                ", empEduc=" + empEduc +
+                ", empDeptid=" + empDeptid +
+                ", empDept='" + empDept + '\'' +
+                ", empPosName='" + empPosName + '\'' +
+                ", empPhone='" + empPhone + '\'' +
+                ", empAddress='" + empAddress + '\'' +
+                ", empStatus=" + empStatus +
+                ", empMail='" + empMail + '\'' +
+                ", empPass='" + empPass + '\'' +
+                ", empGrade=" + empGrade +
+                '}';
+    }
 }

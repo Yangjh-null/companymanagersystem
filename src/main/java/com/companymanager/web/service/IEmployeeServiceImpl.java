@@ -28,12 +28,12 @@ public class IEmployeeServiceImpl implements  IEmployeeService{
 
     @Override
     public int insertIntoNewEmployee(Employee employee) {
-         //生成工号：主键
-         String empId = UUID.randomUUID().toString().substring(3,8);
-         employee.setEmpId(empId);
-         redisUtil.set(EMP_KEY+empId,"1");
-         int row = employeeMapper.insertNewEmployee(employee);
-         return row;
+//         //生成工号：主键
+//         String empId = UUID.randomUUID().toString().substring(3,8);
+//         employee.setEmpId(empId);
+//         redisUtil.set(EMP_KEY+empId,"1");
+//         int row = employeeMapper.insertNewEmployee(employee);
+            return 1;
     }
 
     /*通过用户名密码查找已审批的员工  已审批方可登录成功 否则 等待人事审批
@@ -52,8 +52,8 @@ public class IEmployeeServiceImpl implements  IEmployeeService{
 
     //修改员工基本信息
     @Override
-    public int updateEmployeeInfo(Employee employee) {
-        int row = employeeMapper.updateEmployeeInfo(employee);
+    public int updateEmployeeInfo(Map<String,String> map) {
+        int row = employeeMapper.updateEmpInfo(map);
         return row;
     }
 

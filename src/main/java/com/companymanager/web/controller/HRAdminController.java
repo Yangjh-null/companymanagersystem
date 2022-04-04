@@ -4,7 +4,9 @@ import com.companymanager.config.rocketmq.RocketMqHelper;
 import com.companymanager.entity.Employee;
 import com.companymanager.entity.TransactionInfo;
 import com.companymanager.entity.UtilInfo;
+import com.companymanager.entity.condition.EmployeeCondition;
 import com.companymanager.entity.condition.SalaryOrderTopic;
+import com.companymanager.util.RedisUtil;
 import com.companymanager.web.service.IAdminService;
 import com.companymanager.z_resultpackage.Result;
 import com.companymanager.z_resultpackage.ResultStatus;
@@ -19,12 +21,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("admin")
 public class HRAdminController {
 
     private static final Logger LOG = LoggerFactory.getLogger(HRAdminController.class);
+
+    public static final String  EMP_KEY = "EMPLOYEE_KEY:";
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Autowired
     private RocketMqHelper rocketMqHelper;
@@ -39,7 +47,26 @@ public class HRAdminController {
         return  row == 1 ?Result.successNoData(ResultStatus.SUCCESS):Result.fail(ResultStatus.FAIL);
     }
 
-    //员工注册审批
+    //员工注册审批  员工管理 -》 新增员工
+    @RequestMapping("insertNewCompany")
+    public Result insertNewCompany(@RequestBody EmployeeCondition employeeCondition){
+        String empId = UUID.randomUUID().toString().substring(3,8);
+        employeeCondition.setEmpId(empId);
+        redisUtil.set(EMP_KEY+empId,"1");
+        int row = adminService.insertNewCompanyInfo(employeeCondition);
+        if(row == 2){
+            rocketMqHelper.asyncSend("rocketmq-group-employee-access",MessageBuilder.withPayload(employeeCondition).build());
+            return Result.successNoData(ResultStatus.SUCCESS);
+        }
+        return Result.fail(ResultStatus.FAIL);
+    }
+
+    //修改员工信息
+    @RequestMapping("updateEmpInfo")
+    public Result updateEmployeeInfo(@RequestBody  EmployeeCondition emp){
+        boolean bool = adminService.updateEmpInfo(emp);
+        return bool ? Result.successNoData(ResultStatus.SUCCESS): Result.fail(ResultStatus.FAIL) ;
+    }
 
         //1. 查看所有未审批的员工
     @RequestMapping("noAccessEmp")

@@ -4,6 +4,7 @@ import com.companymanager.entity.Employee;
 import com.companymanager.entity.SalaryRealInfo;
 import com.companymanager.entity.TransactionInfo;
 import com.companymanager.entity.UtilInfo;
+import com.companymanager.entity.condition.EmployeeCondition;
 import com.companymanager.entity.condition.SalaryOrderTopic;
 
 import java.util.List;
@@ -12,6 +13,10 @@ import java.util.Map;
 public interface IAdminService {
 
     int queryAdmin(Map<String,String> map);
+    //新增员工
+    int insertNewCompanyInfo(EmployeeCondition employeeCondition);
+
+    boolean updateEmpInfo(EmployeeCondition  employeeCondition);
 
     List<Employee> queryNoAccessEmp();
     boolean updateEmployeeStatus(Map<String,String> map );

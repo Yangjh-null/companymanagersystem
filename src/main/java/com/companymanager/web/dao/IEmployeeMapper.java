@@ -3,6 +3,7 @@ package com.companymanager.web.dao;
 import com.companymanager.entity.Employee;
 import com.companymanager.entity.TransactionInfo;
 import com.companymanager.entity.TransactionInfoSum;
+import com.companymanager.entity.condition.EmployeeCondition;
 import com.companymanager.web.dao.sqlcondition.SQLProvider;
 import org.apache.ibatis.annotations.*;
 
@@ -15,9 +16,9 @@ public interface IEmployeeMapper {
 
     //员工注册账号
     @Insert("INSERT INTO employee_info " +
-            "(emp_id,emp_name,emp_card,emp_sex,emp_educ,emp_deptid,emp_dept,emp_pos_name,emp_status,emp_phone,emp_address,emp_mail,emp_pass) " +
+            "(emp_id,emp_name,emp_card,emp_sex,emp_educ,emp_deptid,emp_dept,emp_pos_name,emp_status,emp_phone,emp_address,emp_mail,emp_pass,emp_grade) " +
             "VALUES(#{empId},#{empName},#{empCard},#{empSex},#{empEduc},#{empDeptid},#{empDept},#{empPosName},0,#{empPhone},#{empAddress},#{empMail},#{empPass},#{empGrade}); ")
-    int insertNewEmployee(Employee emp);
+    int insertNewEmployee(EmployeeCondition  emp);
 
     //员工登录账号
     @Select("select * from employee_info where emp_id = #{empId} AND emp_pass = #{empPass} ")
@@ -27,10 +28,11 @@ public interface IEmployeeMapper {
     int updateEmployeePassword(Map<String,String> map);
     //修改员工基本信息
     @Update("UPDATE  employee_info SET " +
-            "emp_name = #{empName},emp_card=#{empCard},emp_sex=#{empSex},emp_educ=#{empEduc}, " +
-            "emp_dept=#{empDept},emp_pos_name=#{empPosName},emp_phone=#{empPhone},emp_address=#{empAddress},emp_mail=#{empMail}" +
+            "emp_phone=#{empPhone},emp_address=#{empAddress},emp_mail=#{empMail}" +
             " where emp_id = #{empId} ")
-    int updateEmployeeInfo(Employee emp);
+    int updateEmpInfo(Map<String,String> map);
+
+
 
     //事务申请：
     @Insert("insert into transaction_info (emp_id, dep_id, trans_demo, trans_reason, trans_time, status_access, tran_time)\n" +

@@ -64,9 +64,9 @@ public class EmployeeController {
     }
     //修改个人信息
     @RequestMapping("updateEmpInfo")
-    public Result updateEmployeeInfo(@RequestBody Employee emp){
-        LOG.info("updateEmpInfo接口参数："+emp);
-        int row  = employeeService.updateEmployeeInfo(emp);
+    public Result updateEmployeeInfo(@RequestBody Map<String,String> map){
+        LOG.info("updateEmpInfo接口参数：");
+        int row  = employeeService.updateEmployeeInfo(map);
         return row == 1 ?Result.successNoData(ResultStatus.SUCCESS):Result.successNoData(ResultStatus.FAIL);
     }
 

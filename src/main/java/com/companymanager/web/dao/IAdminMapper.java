@@ -1,6 +1,7 @@
 package com.companymanager.web.dao;
 
 import com.companymanager.entity.*;
+import com.companymanager.entity.condition.EmployeeCondition;
 import com.companymanager.entity.condition.SalaryOrderTopic;
 import com.companymanager.web.dao.sqlcondition.SQLProvider;
 import org.apache.ibatis.annotations.*;
@@ -14,6 +15,16 @@ public interface IAdminMapper {
     @Select("select count(*) from root_hr where admin = #{name} and password = #{pass}")
     int queryAdmin(Map<String,String> map);
 
+
+    @Update("UPDATE  employee_info SET " +
+            "emp_name = #{empName},emp_card=#{empCard},emp_sex=#{empSex},emp_educ=#{empEduc}, " +
+            "emp_dept=#{empDept},emp_pos_name=#{empPosName},emp_phone=#{empPhone},emp_address=#{empAddress},emp_mail=#{empMail}" +
+            " where emp_id = #{empId} ")
+    int updateEmployeeInfo(Employee emp);
+
+    @Update("update  salary_info set sar_basic = #{sarBasic},sar_merits = #{sarMerits} where emp_id = #{empId}")
+    int updateEmpSalary(EmployeeCondition emp);
+
     //审批员工的状态
         // 1. 查看未审批的员工
     @Select("select * from employee_info where emp_status = 0")
@@ -24,8 +35,8 @@ public interface IAdminMapper {
     int updateEmployeeStatus(Map<String,String> map);
         // 3.设置绩效和基本工资
      @Insert("insert into salary_info (emp_id, sar_basic, sar_merits,  sal_merits_precent)\n" +
-             "values(#{empId},#{sarBasic},#{sarMerits},0);")
-    int insertSalary(Map<String,String> map);
+             "values(#{empId},#{sarBasic},#{sarMerits},100);")
+    int insertSalary(EmployeeCondition employeeCondition);
 
     @SelectProvider(value = SQLProvider.class,method = "queryTransactionInfo")
     List<TransactionInfo> queryTransactionInfo(Map<String,String> map);
