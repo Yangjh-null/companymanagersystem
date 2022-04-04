@@ -18,7 +18,7 @@ public interface IAdminMapper {
 
     @Update("UPDATE  employee_info SET " +
             "emp_name = #{empName},emp_card=#{empCard},emp_sex=#{empSex},emp_educ=#{empEduc}, " +
-            "emp_dept=#{empDept},emp_pos_name=#{empPosName},emp_phone=#{empPhone},emp_address=#{empAddress},emp_mail=#{empMail}" +
+            "emp_dept=#{empDept},emp_deptid=#{empDeptid},emp_pos_name=#{empPosName},emp_phone=#{empPhone},emp_address=#{empAddress},emp_mail=#{empMail},emp_grade=#{empGrade}" +
             " where emp_id = #{empId} ")
     int updateEmployeeInfo(Employee emp);
 
