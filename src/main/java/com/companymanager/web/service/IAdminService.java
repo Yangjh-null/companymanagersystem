@@ -18,8 +18,11 @@ public interface IAdminService {
 
     boolean updateEmpInfo(EmployeeCondition  employeeCondition);
 
-    List<Employee> queryNoAccessEmp();
-    boolean updateEmployeeStatus(Map<String,String> map );
+    List<EmployeeCondition> queryAllEmployee();
+    List<EmployeeCondition> highSearch(Map<String,String> map);
+
+//    List<Employee> queryNoAccessEmp();
+//    boolean updateEmployeeStatus(Map<String,String> map );
 
     List<TransactionInfo> queryTransactionInfo(Map<String,String> map);
 

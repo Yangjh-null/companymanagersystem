@@ -5,6 +5,7 @@ import com.companymanager.entity.condition.EmployeeCondition;
 import com.companymanager.entity.condition.SalaryOrderTopic;
 import com.companymanager.web.dao.sqlcondition.SQLProvider;
 import org.apache.ibatis.annotations.*;
+import org.springframework.jdbc.core.SqlProvider;
 
 import java.util.List;
 import java.util.Map;
@@ -25,15 +26,23 @@ public interface IAdminMapper {
     @Update("update  salary_info set sar_basic = #{sarBasic},sar_merits = #{sarMerits} where emp_id = #{empId}")
     int updateEmpSalary(EmployeeCondition emp);
 
-    //审批员工的状态
-        // 1. 查看未审批的员工
-    @Select("select * from employee_info where emp_status = 0")
-    List<Employee> queryNoAccessEmp();
+    //查看所有员工
+    @Select("SELECT emp.*,sal.sar_basic ,sal.sar_merits FROM employee_info as emp,salary_info as sal\n" +
+            "where emp.emp_id = sal.emp_id;")
+    List<EmployeeCondition> queryAllEmployee();
 
-        // 2.修改审批状态 同意审批
-    @Update("update employee_info  set emp_status = 1 where emp_id = #{empId} ")
-    int updateEmployeeStatus(Map<String,String> map);
-        // 3.设置绩效和基本工资
+    @SelectProvider(value = SQLProvider.class,method = "highSearch")
+    List<EmployeeCondition> highSearch(Map<String,String> map);
+
+//    //审批员工的状态
+//        // 1. 查看未审批的员工
+//    @Select("select * from employee_info where emp_status = 0")
+//    List<Employee> queryNoAccessEmp();
+//
+//        // 2.修改审批状态 同意审批
+//    @Update("update employee_info  set emp_status = 1 where emp_id = #{empId} ")
+//    int updateEmployeeStatus(Map<String,String> map);
+//        // 3.设置绩效和基本工资
      @Insert("insert into salary_info (emp_id, sar_basic, sar_merits,  sal_merits_precent)\n" +
              "values(#{empId},#{sarBasic},#{sarMerits},100);")
     int insertSalary(EmployeeCondition employeeCondition);

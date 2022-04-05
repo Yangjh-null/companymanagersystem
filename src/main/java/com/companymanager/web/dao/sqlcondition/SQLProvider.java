@@ -34,6 +34,26 @@ public class SQLProvider {
         return sql.toString();
     }
 
+    public String highSearch(Map<String,String> map){
+        StringBuilder sql = new StringBuilder("SELECT emp.*,sal.sar_basic ,sal.sar_merits FROM employee_info as emp\n" +
+                "left join salary_info as sal on  emp.emp_id = sal.emp_id where 1=1 ");
+        if(map.get("empId")!=null && "".equals(map.get("empId"))){
+            sql.append(" AND emp.emp_id = '"+map.get("empId")+"'");
+        }
+        if(map.get("deptId")!=null && "".equals(map.get("deptId"))){
+            sql.append(" AND emp.emp_deptid = '"+map.get("deptId")+"'");
+        }
+        if(map.get("empName")!=null && "".equals(map.get("empName"))){
+            sql.append(" AND emp.emp_name like '%"+map.get("empName")+"%'");
+        }
+
+        LOG.info("高级查询SQL："+sql.toString());
+        return sql.toString();
+    }
+
+
+
+
     //hr查看申请的事务sql
     public String queryTransactionInfo(Map<String,String> map){
         StringBuilder sql = new StringBuilder("SELECT trans.*,emp_name FROM player_manage_system.transaction_info trans\n" +

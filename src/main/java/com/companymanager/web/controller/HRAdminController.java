@@ -69,25 +69,39 @@ public class HRAdminController {
     }
 
         //1. 查看所有未审批的员工
-    @RequestMapping("noAccessEmp")
-    public Result accessEmployeeStatus(){
-        List<Employee> employeeList = adminService.queryNoAccessEmp();
-        return Result.successAndData(ResultStatus.SUCCESS,employeeList);
-    }
-        //2.修改状态
-    @RequestMapping("updateAccessStatus")
-    public Result updateEmployeeAccess(@RequestBody Map<String,String> map ){
-        if(map.get("status").equals("0")){
-            rocketMqHelper.asyncSend("rocketmq-group-employee-access", MessageBuilder.withPayload(map).build());
-            return Result.successNoData(ResultStatus.SUCCESS);
-        }
-        boolean bool = adminService.updateEmployeeStatus(map);
+//    @RequestMapping("noAccessEmp")
+//    public Result accessEmployeeStatus(){
+//        List<Employee> employeeList = adminService.queryNoAccessEmp();
+//        return Result.successAndData(ResultStatus.SUCCESS,employeeList);
+//    }
+//        //2.修改状态
+//    @RequestMapping("updateAccessStatus")
+//    public Result updateEmployeeAccess(@RequestBody Map<String,String> map ){
+//        if(map.get("status").equals("0")){
+//            rocketMqHelper.asyncSend("rocketmq-group-employee-access", MessageBuilder.withPayload(map).build());
+//            return Result.successNoData(ResultStatus.SUCCESS);
+//        }
+//        boolean bool = adminService.updateEmployeeStatus(map);
+//
+//        if(bool){ //修改成功在发送
+//            rocketMqHelper.asyncSend("rocketmq-group-employee-access", MessageBuilder.withPayload(map).build());
+//            return Result.successNoData(ResultStatus.SUCCESS);
+//        }
+//        return Result.fail(ResultStatus.FAIL); //失败
+//    }
 
-        if(bool){ //修改成功在发送
-            rocketMqHelper.asyncSend("rocketmq-group-employee-access", MessageBuilder.withPayload(map).build());
-            return Result.successNoData(ResultStatus.SUCCESS);
-        }
-        return Result.fail(ResultStatus.FAIL); //失败
+    //查看所有的员工
+    @RequestMapping("queryAllEmp")
+    public Result queryAllEmployee(){
+        List<EmployeeCondition> list = adminService.queryAllEmployee();
+        return Result.successAndData(ResultStatus.SUCCESS,list);
+    }
+
+    //高级搜索
+    @RequestMapping("highSearchEmp")
+    public Result highSearchEmp(@RequestBody Map<String,String> map){
+        List<EmployeeCondition> list = adminService.highSearch(map);
+        return Result.successAndData(ResultStatus.SUCCESS,list);
     }
 
     //查看申请的事务

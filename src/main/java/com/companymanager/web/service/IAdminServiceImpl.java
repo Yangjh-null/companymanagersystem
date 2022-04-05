@@ -52,23 +52,35 @@ public class IAdminServiceImpl implements IAdminService {
         return row1==row2;
     }
 
+    @Override
+    public List<EmployeeCondition> queryAllEmployee() {
+        List<EmployeeCondition > employeeList = adminMapper.queryAllEmployee();
+        return employeeList == null?new ArrayList<>(): employeeList;
+    }
+
+    @Override
+    public List<EmployeeCondition> highSearch(Map<String, String> map) {
+        List<EmployeeCondition > highSearchList = adminMapper.highSearch(map);
+        return highSearchList == null?new ArrayList<>(): highSearchList;
+    }
+
     //审批注册员工
         //1.查看未审批的员工
-    @Override
-    public List<Employee> queryNoAccessEmp() {
-        List<Employee> list = adminMapper.queryNoAccessEmp();
-
-        return list == null ? new ArrayList<>(): list;
-    }
-        //2.修改状态
-    @Override
-    @Transactional
-    public boolean updateEmployeeStatus(Map<String, String> map) {
-       int row1 =  adminMapper.updateEmployeeStatus(map); //修改状态
-
-
-        return (row1 == 1);
-    }
+//    @Override
+//    public List<Employee> queryNoAccessEmp() {
+//        List<Employee> list = adminMapper.queryNoAccessEmp();
+//
+//        return list == null ? new ArrayList<>(): list;
+//    }
+//        //2.修改状态
+//    @Override
+//    @Transactional
+//    public boolean updateEmployeeStatus(Map<String, String> map) {
+//       int row1 =  adminMapper.updateEmployeeStatus(map); //修改状态
+//
+//
+//        return (row1 == 1);
+//    }
 
     //查看事务  未审批 已审批
     @Override
