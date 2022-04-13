@@ -1,6 +1,7 @@
 package com.companymanager.web.dao.sqlcondition;
 
 import com.companymanager.entity.condition.SalaryOrderTopic;
+import org.apache.ibatis.annotations.Insert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.SqlProvider;
@@ -37,13 +38,13 @@ public class SQLProvider {
     public String highSearch(Map<String,String> map){
         StringBuilder sql = new StringBuilder("SELECT emp.*,sal.sar_basic ,sal.sar_merits FROM employee_info as emp\n" +
                 "left join salary_info as sal on  emp.emp_id = sal.emp_id where 1=1 ");
-        if(map.get("empId")!=null && "".equals(map.get("empId"))){
+        if(map.get("empId")!=null && !"".equals(map.get("empId"))){
             sql.append(" AND emp.emp_id = '"+map.get("empId")+"'");
         }
-        if(map.get("deptId")!=null && "".equals(map.get("deptId"))){
+        if(map.get("deptId")!=null && !"".equals(map.get("deptId"))){
             sql.append(" AND emp.emp_deptid = '"+map.get("deptId")+"'");
         }
-        if(map.get("empName")!=null && "".equals(map.get("empName"))){
+        if(map.get("empName")!=null && !"".equals(map.get("empName"))){
             sql.append(" AND emp.emp_name like '%"+map.get("empName")+"%'");
         }
 
@@ -71,6 +72,22 @@ public class SQLProvider {
         sql.append(" order by tran_time  ");
         return sql.toString();
     }
+
+    //HR查看所有职位信息  包括高级搜索
+    public String searchPositionInfo(Map<String,String> map){
+        StringBuilder sql = new StringBuilder("select dep.dep_id, pos_id,pos_name,dep_name from dept_position as pos\n" +
+                "left join dept_info as dep on dep.dep_id = pos.dept_id where 1=1 ");
+        if(map.get("posName")  != null && !"".equals(map.get("posName"))){
+            sql.append(" AND pos_name like "+"'%"+map.get("posName")+"%'");
+        }
+        if(map.get("depId")  != null && !"".equals(map.get("depId"))){
+            sql.append(" AND dep_id = "+map.get("depId"));
+        }
+
+        LOG.info("查看职位搜索SQL："+sql.toString());
+        return sql.toString();
+    }
+
     //结算工资sql
     public String querySalary(){
         String sql = "select trans.emp_id,ee.emp_name,sar_basic,sar_merits ,sal_merits_precent,Round((sal_merits_precent/100)*sar_merits) as sal_real_merits,trans.late_sum*util.util_late_money as late_mon ,trans.exit_sum*util.util_exit_money as exit_mon ,\n" +

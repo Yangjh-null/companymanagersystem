@@ -1,10 +1,8 @@
 package com.companymanager.web.service;
 
-import com.companymanager.entity.Employee;
-import com.companymanager.entity.SalaryRealInfo;
-import com.companymanager.entity.TransactionInfo;
-import com.companymanager.entity.UtilInfo;
+import com.companymanager.entity.*;
 import com.companymanager.entity.condition.EmployeeCondition;
+import com.companymanager.entity.condition.Position;
 import com.companymanager.entity.condition.SalaryOrderTopic;
 
 import java.util.List;
@@ -37,4 +35,14 @@ public interface IAdminService {
     List<SalaryOrderTopic> queryEveryEmpSalary();
 
    int  saveSalaryRecord(List<SalaryOrderTopic> list);
+
+    List<Position> queryPositionInfo(Map<String,String> map);
+
+    boolean insertNewDept(DeptInfo deptInfo);
+
+    boolean deleteDeptById(int depId);
+
+    boolean deletePositionById(int posId);
+
+
 }

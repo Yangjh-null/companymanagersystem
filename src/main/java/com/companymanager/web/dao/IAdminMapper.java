@@ -2,6 +2,7 @@ package com.companymanager.web.dao;
 
 import com.companymanager.entity.*;
 import com.companymanager.entity.condition.EmployeeCondition;
+import com.companymanager.entity.condition.Position;
 import com.companymanager.entity.condition.SalaryOrderTopic;
 import com.companymanager.web.dao.sqlcondition.SQLProvider;
 import org.apache.ibatis.annotations.*;
@@ -72,18 +73,18 @@ public interface IAdminMapper {
     @Select("SELECT * FROM util_info;")
     UtilInfo queryUtilInfo();
 
-    @Update("\n" +
-            "UPDATE util_info SET  " +
-            "util_mark =#{utilMark} ," +
-            "util_eat_sub =#{utilEatSub} ,\n" +
-            "util_traffic_sub =#{utilTrafficSub} ,\n" +
-            "util_late = #{utilLate},\n" +
-            "util_exit = #{utilExit},\n" +
+    @Update("UPDATE util_info\n" +
+            "SET\n" +
+            "util_mark = #{utilMark} ,\n" +
+            "util_eat_sub = #{utilEatSub},\n" +
+            "util_traffic_sub = #{utilTrafficSub},\n" +
+            "util_late_money =#{utilLateMoney} ,\n" +
+            "util_exit_money = #{utilExitMoney},\n" +
             "util_late_time = #{utilLateTime},\n" +
             "util_exit_time = #{utilExitTime},\n" +
             "util_hoilday_money = #{utilHoildayMoney},\n" +
-            "util_overtime_money = #{utilOvertimeMoney} " +
-            "WHERE id = #{id} ")
+            "util_overtime_money = #{utilOvertimeMoney}\n" +
+            "WHERE id = #{id};")
     int updateUtilInfo(UtilInfo utilInfo);
 
     //查看各部门的人数
@@ -93,10 +94,35 @@ public interface IAdminMapper {
             "group by(emp_pos_name) ")
     List<Map<String,Integer> > queryDeptSumByDeptId();
 
+    //查看所有部门职位信息  包括高级搜索
+    @SelectProvider(value = SQLProvider.class,method = "searchPositionInfo")
+    List<Position> queryPositionInfo(Map<String,String> map);
+
+    //新增职位 分为 新增部门和职位
+    //1. 新增部门
+    @Insert("insert into dept_info(dept_name,dept_info)values(#{deptName},#{deptInfo})")
+    int insertNewDept(DeptInfo deptInfo);
+
+    //2. 新增职位
+    @Insert("insert into dept_position(dept_id,pos_name)values(#{deptId},#{posName}); ")
+    int insertNewPosition(DeptInfo deptInfo);
+
+
+    //3.删除部门  自动删除下边的职位
+    @Delete("delete from dept_info where dep_id = #{depId} ; delete from dept_position where dept_id = #{depId} ;")
+    int deleteDeptById(int depId);
+
+    //4. 删除职位
+    @Delete("delete from dept_position where pos_id = #{posId}")
+    int deletePositionById(int posId);
+
+
+
+
     //结算工资：
     @SelectProvider(value = SQLProvider.class,method = "querySalary")
     List<SalaryOrderTopic> queryEveryEmpSalary();
-
+    //保存工资
     @InsertProvider(value = SQLProvider.class,method = "saveSalaryRecord")
     int saveSalaryRecord(List<SalaryOrderTopic> list);
 }

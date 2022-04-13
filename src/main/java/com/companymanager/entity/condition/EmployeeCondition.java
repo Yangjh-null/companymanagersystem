@@ -9,6 +9,15 @@ public class EmployeeCondition extends Employee {
 
     private int sarBasic;
     private int sarMerits;
+    private int salMeritsPrecent;
+
+    public int getSalMeritsPrecent() {
+        return salMeritsPrecent;
+    }
+
+    public void setSalMeritsPrecent(int salMeritsPrecent) {
+        this.salMeritsPrecent = salMeritsPrecent;
+    }
 
     public int getSarBasic() {
         return sarBasic;

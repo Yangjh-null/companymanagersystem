@@ -1,12 +1,15 @@
 package com.companymanager.web.controller;
 
 import com.companymanager.config.rocketmq.RocketMqHelper;
+import com.companymanager.entity.DeptInfo;
 import com.companymanager.entity.Employee;
 import com.companymanager.entity.TransactionInfo;
 import com.companymanager.entity.UtilInfo;
 import com.companymanager.entity.condition.EmployeeCondition;
+import com.companymanager.entity.condition.Position;
 import com.companymanager.entity.condition.SalaryOrderTopic;
 import com.companymanager.util.RedisUtil;
+import com.companymanager.util.ScheduleTask;
 import com.companymanager.web.service.IAdminService;
 import com.companymanager.z_resultpackage.Result;
 import com.companymanager.z_resultpackage.ResultStatus;
@@ -18,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -26,6 +29,16 @@ import java.util.UUID;
 @RestController
 @RequestMapping("admin")
 public class HRAdminController {
+
+
+
+    private static  List<SalaryOrderTopic> salaryOrderTopicList = new ArrayList<>();
+
+    private HRAdminController() { }
+    //静态工厂方法 返回唯一实例
+    public static List<SalaryOrderTopic> getSalaryOrderTopicListObject(){
+        return salaryOrderTopicList;
+    }
 
     private static final Logger LOG = LoggerFactory.getLogger(HRAdminController.class);
 
@@ -144,15 +157,48 @@ public class HRAdminController {
         return Result.successAndData(ResultStatus.SUCCESS,list);
 
     }
-    //结算工资
-    @RequestMapping("settleAccounts")
-    public Result settleAccounts(){
-        List<SalaryOrderTopic> list = adminService.queryEveryEmpSalary();
 
+    @RequestMapping("highSearchPosition")
+    public Result highSearchPosition(@RequestBody Map<String,String> map){
+        List<Position> list = adminService.queryPositionInfo(map);
         return Result.successAndData(ResultStatus.SUCCESS,list);
     }
 
-    //发放工资并保存记录
+    //新增部门 / 职位 依靠传参主键 判断
+    @RequestMapping("insertDeptOrPos")
+    public Result insertDept(@RequestBody DeptInfo deptInfo){
+        boolean bool = adminService.insertNewDept(deptInfo);
+        return Result.successNoData(ResultStatus.SUCCESS);
+    }
+
+    //删除部门
+    @RequestMapping("delDept")
+    public Result deleteDept(@RequestBody Map<String,String>map){
+        int deptId = Integer.parseInt(map.get("deptId"));
+        boolean bool = adminService.deleteDeptById(deptId);
+        return bool ? Result.successNoData(ResultStatus.SUCCESS):Result.successNoData(ResultStatus.FAIL);
+    }
+    //删除职位
+    @RequestMapping("delPos")
+    public Result deletePosition(@RequestBody Map<String,String> map){
+        int posId = Integer.parseInt(map.get("posId"));
+        boolean bool = adminService.deletePositionById(posId);
+        return bool ? Result.successNoData(ResultStatus.SUCCESS):Result.successNoData(ResultStatus.FAIL);
+
+    }
+
+
+
+    //结算工资
+    @RequestMapping("settleAccounts")
+    public Result settleAccounts(){
+        //获取当前工资集合
+        List<SalaryOrderTopic> list = getSalaryOrderTopicListObject();
+        return Result.successAndData(ResultStatus.SUCCESS,list);
+    }
+
+
+    //保存工资记录
     @RequestMapping("saveSalary")
     public Result saveSalaryRecord(@RequestBody List<SalaryOrderTopic> list){
 
@@ -160,7 +206,5 @@ public class HRAdminController {
 
         return effRow == list.size() ?Result.successNoData(ResultStatus.SUCCESS): Result.fail(ResultStatus.FAIL);
     }
-
-
 
 }

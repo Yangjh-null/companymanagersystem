@@ -1,5 +1,6 @@
 package com.companymanager.web.controller;
 
+import com.companymanager.entity.UtilInfo;
 import com.companymanager.entity.condition.EchartsCondition;
 import com.companymanager.entity.condition.EchartsConditionToOne;
 import com.companymanager.web.service.UtilService;

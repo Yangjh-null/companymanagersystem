@@ -2,6 +2,7 @@ package com.companymanager.web.service;
 
 import com.companymanager.entity.*;
 import com.companymanager.entity.condition.EmployeeCondition;
+import com.companymanager.entity.condition.Position;
 import com.companymanager.entity.condition.SalaryOrderTopic;
 import com.companymanager.web.dao.IAdminMapper;
 import com.companymanager.web.dao.IEmployeeMapper;
@@ -147,6 +148,35 @@ public class IAdminServiceImpl implements IAdminService {
     public List<Map<String, Integer>> queryDeptSumByDeptId() {
         List<Map<String,Integer>> list = adminMapper.queryDeptSumByDeptId();
         return list == null?  new ArrayList<>()  : list;
+    }
+    //查找职位 高级搜索
+    @Override
+    public List<Position> queryPositionInfo(Map<String, String> map) {
+        List<Position> list = adminMapper.queryPositionInfo(map);
+        return list == null ? new ArrayList<>() :list;
+    }
+
+    //新增职位
+    @Override
+    public boolean insertNewDept(DeptInfo deptInfo) {
+        if(deptInfo!=null && deptInfo.getPosId()!=0 && deptInfo.getPosName() != null ){
+            int row = adminMapper.insertNewPosition(deptInfo);
+            return row == 1;
+        }
+        int row2 = adminMapper.insertNewDept(deptInfo);
+        return 1 == row2;
+    }
+    //  删除部门 递归删除下边的职位
+    @Override
+    public boolean deleteDeptById(int depId) {
+        int row = adminMapper.deleteDeptById(depId);
+        LOG.info("row: "+row);
+        return 1 == row;
+    }
+    //仅删除职位
+    @Override
+    public boolean deletePositionById(int posId) {
+        return 1 == adminMapper.deletePositionById(posId);
     }
 
     //结算工资

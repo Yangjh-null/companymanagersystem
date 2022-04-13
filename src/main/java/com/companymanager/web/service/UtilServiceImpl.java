@@ -1,5 +1,6 @@
 package com.companymanager.web.service;
 
+import com.companymanager.entity.UtilInfo;
 import com.companymanager.entity.condition.EchartsCondition;
 import com.companymanager.entity.condition.EchartsConditionToOne;
 import com.companymanager.web.dao.IUtilMapper;

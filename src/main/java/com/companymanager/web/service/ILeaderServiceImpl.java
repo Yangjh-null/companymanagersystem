@@ -3,6 +3,7 @@ package com.companymanager.web.service;
 import com.companymanager.entity.SalaryInfo;
 import com.companymanager.entity.TransactionInfo;
 import com.companymanager.entity.TransactionInfoSum;
+import com.companymanager.entity.condition.EmployeeCondition;
 import com.companymanager.entity.condition.TransInfoSumCondition;
 import com.companymanager.web.dao.ILeaderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,11 @@ public class ILeaderServiceImpl implements ILeaderService {
     public int updateMeritsByEmpId(SalaryInfo salaryInfo) {
         int row = leaderMapper.updateMeritsByEmpId(salaryInfo);
         return row;
+    }
+
+    @Override
+    public List<EmployeeCondition> querySalMeritsByDeptId(Map<String, Integer> map) {
+        List<EmployeeCondition> list = leaderMapper.querySalMeritsByDeptId(map);
+        return list == null? new ArrayList<>(): list ;
     }
 }

@@ -1,9 +1,11 @@
 package com.companymanager.web.dao;
 
+import com.companymanager.entity.UtilInfo;
 import com.companymanager.entity.condition.EchartsCondition;
 import com.companymanager.entity.condition.EchartsConditionToOne;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +34,6 @@ public interface IUtilMapper {
     @Select("select dep_name as name,count(*) as value from dept_info left join employee_info on emp_deptid = dep_id\n" +
             "group by(dep_name);")
     List<EchartsCondition> queryNumberSumByDeptName();
-
 
 
 }
